@@ -33,9 +33,9 @@ class YelpReviewsSpider(scrapy.Spider):
         for review_obj in response.css('div.review-list ul.reviews li div.review:not(.js-war-widget)'):
             yield from self.parse_review(review_obj)
 
-        # next_link = response.css('a.next::attr("href")')
-        # if next_link is not None:
-        #     yield scrapy.Request(next_link.extract_first(), callback=self.parse)
+        next_link = response.css('a.next::attr("href")').extract_first()
+        if next_link is not None:
+            yield scrapy.Request(next_link, callback=self.parse)
 
     def parse_review(self, response):
         review = ReviewItem()
@@ -52,12 +52,16 @@ class YelpReviewsSpider(scrapy.Spider):
         review['user_id'] = raw_user_id[1]
         review['user_name'] = raw_user.css('::text').extract_first()
 
-        review['review_votes'] = self.parse_votes(response.css('ul.voting-buttons'))
+        review['review_votes'] = self.parse_votes(response.css('ul.voting-buttons li'))
         yield review
 
     def parse_votes(self, response):
         votes = ReviewVotes()
 
         # TODO parse votes
+        for button in response:
+            vote_type = button.css('span.vote-type::text').extract_first().lower()
+            vote_count = button.css('span.count::text').extract_first()
+            votes[vote_type] = int(vote_count) if vote_count is not None else 0
 
         return votes
