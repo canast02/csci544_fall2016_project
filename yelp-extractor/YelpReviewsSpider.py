@@ -26,9 +26,8 @@ class YelpReviewsSpider(scrapy.Spider):
         super().__init__()
 
         self.ids = ids
-        # TODO create urls
-        for id in ids:
-            self.start_urls.append(self.base_url + id)
+        for b_id in ids:
+            self.start_urls.append(self.base_url + b_id)
 
     def parse(self, response):
         for review_obj in response.css('div.review-list ul.reviews li div.review:not(.js-war-widget)'):
@@ -58,5 +57,7 @@ class YelpReviewsSpider(scrapy.Spider):
 
     def parse_votes(self, response):
         votes = ReviewVotes()
+
+        # TODO parse votes
 
         return votes
