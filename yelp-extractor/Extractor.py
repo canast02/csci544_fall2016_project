@@ -1,10 +1,13 @@
-import json
-
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
 
+from Jsonify import jsonify
 
-def restaurants_with_menus(client, params, limit=20):
+
+def businesses_with_menus(creds, params, limit=20):
+    auth = Oauth1Authenticator(**creds)
+    client = Client(auth)
+
     businesses = []
     has_menu = lambda r: r.menu_provider is not None
 
@@ -17,26 +20,4 @@ def restaurants_with_menus(client, params, limit=20):
         with_menus = list(filter(has_menu, response.businesses))
         businesses += with_menus
 
-    return businesses
-
-
-def main():
-    # read API keys
-    with open('config_secret.json') as cred:
-        creds = json.load(cred)
-        auth = Oauth1Authenticator(**creds)
-        client = Client(auth)
-
-    params = {
-        'lang': 'en'
-    }
-
-    restaurants = restaurants_with_menus(client, params, limit=20)
-    print(restaurants)
-
-    print(restaurants[0]._fields)
-    attrs = {key: value for key, value in restaurants[0].__dict__.items()}
-    print(attrs)
-
-if __name__ == '__main__':
-    main()
+    return [jsonify(x) for x in businesses]
