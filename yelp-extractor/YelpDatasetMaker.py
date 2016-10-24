@@ -1,6 +1,7 @@
 import json
 
 from Extractor import businesses_with_menus
+from Scraper import scrape_ids
 
 
 def main():
@@ -21,6 +22,8 @@ def main():
         print("Stored in JSON format")
 
     business_ids = [r['id'] for r in businesses]
+
+    scrape_ids(business_ids)
 
 
 if __name__ == '__main__':

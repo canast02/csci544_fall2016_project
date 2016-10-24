@@ -2,7 +2,7 @@ import scrapy
 
 
 class YelpMenuSpider(scrapy.Spider):
-    name = "MenuSpider"
+    name = "menus"
     start_urls = []
 
     def __init__(self, ids):
