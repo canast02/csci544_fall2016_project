@@ -4,8 +4,10 @@
 
 In order to run the extractor you will need to install yelp-python and scrapy.
 
-```$ pip install yelp
-$ pip install scrapy```
+```
+$ pip install yelp  
+$ pip install scrapy
+```
 
 ### Setup
 
