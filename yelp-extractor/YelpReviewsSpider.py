@@ -58,7 +58,8 @@ class YelpReviewsSpider(scrapy.Spider):
             review['review_votes'] = self.parse_votes(review_obj.css('ul.voting-buttons li'))
             yield review
 
-    def parse_votes(self, response):
+    @staticmethod
+    def parse_votes(response):
         votes = ReviewVotes()
 
         for button in response:

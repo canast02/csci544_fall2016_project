@@ -19,5 +19,6 @@ def businesses_with_menus(creds, params, limit=20):
             break
         with_menus = list(filter(has_menu, response.businesses))
         businesses += with_menus
+        iteration += 1
 
     return [jsonify(x) for x in businesses]
