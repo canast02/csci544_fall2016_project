@@ -13,7 +13,7 @@ $ pip install Unidecode
 
 ### Setup
 
-Create a file named config_secret.json with your Yelp API keys.
+Create a file named config_secret.json with your Yelp API keys in your working directory.
 
 ```
 {
