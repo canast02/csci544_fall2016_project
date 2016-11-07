@@ -12,13 +12,13 @@ def businesses_with_menus(creds, params, limit=20):
     has_menu = lambda r: r.menu_provider is not None
 
     iteration = 0
-    while len(businesses) < limit:
+    while len(businesses) < limit and iteration * 20 < 1000:
         params['offset'] = iteration * 20
         response = client.search('Los Angeles', **params)
-        if len(response.businesses) <= 0:
-            break
-        with_menus = list(filter(has_menu, response.businesses))
-        businesses += with_menus
+        # with_menus = list(filter(has_menu, response.businesses))
+        # businesses += with_menus
+        for b in filter(has_menu, response.businesses):
+            businesses.append(b)
         iteration += 1
 
     return [jsonify(x) for x in businesses]
