@@ -2,11 +2,13 @@
 
 ### Required python libraries
 
-In order to run the extractor you will need to install yelp-python and scrapy.
+In order to run the extractor you will need to install yelp-python and scrapy. 
+We also need Unidecode in order to be able to convert unicode to ascii.
 
 ```
 $ pip install yelp  
 $ pip install scrapy
+$ pip install Unidecode
 ```
 
 ### Setup

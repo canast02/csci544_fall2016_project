@@ -1,5 +1,6 @@
 import json
 import urllib.parse
+from unidecode import unidecode
 
 
 def main():
@@ -26,7 +27,11 @@ def main():
     b = list(filter(lambda x: x['id'] not in diff, jb))
     r = list(filter(lambda x: x['restaurant_id'] not in diff, jr))
 
-    # TODO convert to ascii
+    for x in r:
+        x['review_text'] = unidecode(x['review_text'])
+    for x in jm:
+        x['name'] = unidecode(x['name'])
+        x['description'] = unidecode(x['description'])
 
     with open('businesses.json', 'w') as f:
         json.dump(b, f, indent=2)
