@@ -1,5 +1,4 @@
 import scrapy
-from unidecode import unidecode
 
 
 class ReviewItem(scrapy.Item):
@@ -46,7 +45,7 @@ class YelpReviewsSpider(scrapy.Spider):
             review['restaurant_id'] = restaurant_id
             review['review_id'] = review_obj.css('div.review::attr("data-review-id")').extract_first()
             raw_text = review_obj.css('div.review-content p::text').extract()
-            review['review_text'] = unidecode("".join(raw_text))
+            review['review_text'] = "".join(raw_text)
             review['review_date'] = review_obj.css('span.rating-qualifier::text').extract_first().strip()
             raw_rating = review_obj.css('div.biz-rating i::attr("title")').extract_first().split(" ")
             review['review_rating'] = float(raw_rating[0])

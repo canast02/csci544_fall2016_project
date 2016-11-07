@@ -1,5 +1,4 @@
 import scrapy
-from unidecode import unidecode
 
 
 class MenuItem(scrapy.Item):
@@ -39,10 +38,10 @@ class YelpMenuSpider(scrapy.Spider):
     def parse_menu_item(item):
         menu_item = MenuItem()
 
-        menu_item['name'] = unidecode("".join(item.css('h4 ::text').extract()).strip())
+        menu_item['name'] = "".join(item.css('h4 ::text').extract()).strip()
         desc = item.css('p.menu-item-details-description::text').extract_first()
         if desc is not None:
-            menu_item['description'] = unidecode(desc.strip())
+            menu_item['description'] = desc.strip()
         else:
             menu_item['description'] = ''
         price = item.css('div.menu-item-prices .menu-item-price-amount::text').extract_first()
