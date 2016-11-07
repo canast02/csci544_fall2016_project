@@ -14,7 +14,7 @@ def main():
     }
 
     print('Getting businesses with menus from Yelp API...')
-    businesses = businesses_with_menus(creds, params, limit=20)
+    businesses = businesses_with_menus(creds, params, limit=500)
     print('Loaded {} businesses'.format(len(businesses)))
 
     with open('businesses.json', 'w') as file:

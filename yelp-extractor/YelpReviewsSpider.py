@@ -1,4 +1,5 @@
 import scrapy
+import urllib.parse
 
 
 class ReviewItem(scrapy.Item):
@@ -39,6 +40,7 @@ class YelpReviewsSpider(scrapy.Spider):
 
     def parse_reviews(self, response):
         restaurant_id = response.url.split("/")[-1].split("?")[0]
+        restaurant_id = urllib.parse.unquote(restaurant_id)
         for review_obj in response.css('div.review-list ul.reviews li div.review:not(.js-war-widget)'):
             review = ReviewItem()
 

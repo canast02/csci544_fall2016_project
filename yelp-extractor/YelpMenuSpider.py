@@ -1,4 +1,5 @@
 import scrapy
+import urllib.parse
 
 
 class MenuItem(scrapy.Item):
@@ -29,6 +30,7 @@ class YelpMenuSpider(scrapy.Spider):
 
     def parse_menu(self, response):
         restaurant_id = response.url.split("/")[4]
+        restaurant_id = urllib.parse.unquote(restaurant_id)
         for item in response.css('div.menu-section div.menu-item'):
             menu_item = self.parse_menu_item(item)
             menu_item['restaurant_id'] = restaurant_id
