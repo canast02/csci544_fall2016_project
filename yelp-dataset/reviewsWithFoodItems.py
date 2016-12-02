@@ -1,4 +1,5 @@
 import json, sets, re
+from fuzzywuzzy import process
 
 foodwords = set()
 rr4to5 = {}
@@ -26,4 +27,8 @@ ks = rr4to5.keys()
 for each in ks:
     revgrams = re.compile('\w+').findall(rr4to5[each])
     if len(foodwords.intersection(revgrams)) == 0: 
-        del rr4to5[each]
+        foodwordslist=list(foodwords)
+        for ele in revgrams:
+            name,score=process.extract(ele,foodwordslist)
+            if(score<80):
+                del rr4to5[each]
