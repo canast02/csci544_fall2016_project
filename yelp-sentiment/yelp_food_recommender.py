@@ -1,3 +1,4 @@
+import random
 from argparse import ArgumentParser
 
 import time
@@ -29,8 +30,16 @@ def main():
 
     start = time.time()
     if args.verbose:
-        print("Analyzing reviews...", end="")
-    for restaurant, menu_item, review_text in produce_triples(args.reviews, args.menus):
+        print("Analyzing reviews...", end="", flush=True)
+        count = 0
+
+    review_filter = lambda x: x['review_rating'] >= 4
+    # random_filter = lambda x: random.random() > 0.6
+    # both_filter = lambda x: x['review_rating'] >= 4 and random.random() > 0.6
+    restaurant_filter = lambda x: random.random() > 0.85  # selecting a random subset of our dataset
+    triples = produce_triples(args.reviews, args.menus, review_filter=review_filter,
+                              restaurant_filter=restaurant_filter)
+    for restaurant, menu_item, review_text in triples:
         sentiment = yelp_sentiment_analyzer.predict([review_text])[0]
         sentiment = sentiment * 2 - 1
         scores.setdefault(restaurant, dict())
@@ -40,19 +49,19 @@ def main():
     end = time.time()
 
     if args.verbose:
-        print("Done ( {} sec )".format(end - start))
+        print("Done in {} sec".format(end - start))
 
     f = open(args.output, 'w')
-    f.write("restaurant,top_choices")
+    f.write("restaurant,top_choices\n")
     if args.verbose:
-        print("Writing out the results...", end="")
+        print("Writing out the results...", end="", flush=True)
 
     for restaurant in scores:
         rscores = [(menu_item, score) for menu_item, score in scores[restaurant].items()]
         rscores.sort(key=lambda tup: tup[1], reverse=True)
         rscores = rscores[:10]
         recommendations = list(map(lambda x: x[0], rscores))
-        f.write("{}, [{}]".format(restaurant, ", ".join(recommendations)))
+        f.write("{}, [{}]\n".format(restaurant, ", ".join(recommendations)))
 
     f.close()
     if args.verbose:
