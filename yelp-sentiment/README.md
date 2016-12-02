@@ -22,3 +22,16 @@ A window will open; navigate to all packages and download ```punkt``` and
 
 You need to run the ```yelp_sentiment_analyzer.py``` giving three parameters; the
 path to the reviews file, the path to the menus file and the filename for the sentiment output.
+
+### Experiments
+
+We have tried performing sentiment analysis classification with the following algorithms:
+
+- Naive Bayes
+- Support Vector Machines (Linear and Nu)
+- Decision Tree
+- Random Forest
+- Maximum Entropy
+- Logistic Regression
+
+
