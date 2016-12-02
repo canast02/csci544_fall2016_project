@@ -38,14 +38,14 @@ def main():
         # train
         words_with_neg = cls.all_words([mark_negation(a) for a in train_x])
         unigram_feats = cls.unigram_word_feats(words_with_neg)
-        bigram_feats = cls.bigram_collocation_feats(train_x)
+        # bigram_feats = cls.bigram_collocation_feats(train_x)
 
         cls.add_feat_extractor(extract_unigram_feats, unigrams=unigram_feats, handle_negation=True)
-        cls.add_feat_extractor(extract_bigram_feats, bigrams=bigram_feats)
+        # cls.add_feat_extractor(extract_bigram_feats, bigrams=bigram_feats)
 
         training_set = cls.apply_features(train_docs, labeled=True)
 
-        cls.train(MaxentClassifier.train, training_set, max_iter=60, trace=0)
+        cls.train(MaxentClassifier.train, training_set, max_iter=10, trace=0)
 
         # test & evaluate
         test_set = cls.apply_features(test_docs)
@@ -53,7 +53,7 @@ def main():
         for key, value in sorted(cls.evaluate(test_set).items()):
             print('\t{0}: {1}'.format(key, value))
             accumulate.setdefault(key, 0.0)
-            accumulate[key] += value
+            accumulate[key] += value if value is not None else 0.0
 
     print("Averages")
     for key, value in sorted(accumulate.items()):

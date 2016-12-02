@@ -1,64 +1,76 @@
 import numpy as np
-from nltk import TweetTokenizer
-from nltk.classify import DecisionTreeClassifier
-from nltk.sentiment import SentimentAnalyzer
-from nltk.sentiment.util import *
+from nltk import TweetTokenizer, accuracy
+from nltk.stem.snowball import EnglishStemmer
+from sklearn import tree
 from sklearn.cross_validation import StratifiedKFold
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics import accuracy_score
+from sklearn.metrics import classification_report
+from sklearn.metrics import precision_recall_fscore_support
 
-from sentiment_util import remove_stopwords, load_datasets
+from sentiment_util import load_datasets
 
 
 def main():
+    # x, y = load_dataset("datasets/sentiment_uci/yelp_labelled.txt")
     x, y = load_datasets(["../datasets/sentiment_uci/yelp_labelled.txt"])
 
     stopwords = set()
     with open('../stopwords.txt', 'r') as f:
         for w in f:
-            stopwords.add(w.strip())
+            stopwords.add(w)
 
     tok = TweetTokenizer()
+    stemmer = EnglishStemmer()
+    vectorizer = TfidfVectorizer(sublinear_tf=True, use_idf=True, binary=True, preprocessor=stemmer.stem,
+                                 tokenizer=tok.tokenize, ngram_range=(1, 2))
 
-    x = [remove_stopwords(tok.tokenize(s.lower()), stopwords) for s in x]
-    x = np.array(x)
-
-    accumulate = dict()
+    accu_p = np.zeros(shape=(2,))
+    accu_r = np.zeros(shape=(2,))
+    accu_f = np.zeros(shape=(2,))
+    accu_a = 0.0
     folds = 10
     for train_idx, test_idx in StratifiedKFold(y=y, n_folds=folds, shuffle=True):
         train_x, train_y = x[train_idx], y[train_idx]
         test_x, test_y = x[test_idx], y[test_idx]
 
-        # train_x = [remove_stopwords(tok.tokenize(s), stopwords) for s in train_x]
-        # test_x = [remove_stopwords(tok.tokenize(s), stopwords) for s in test_x]
-
-        train_docs = [(sent, label) for sent, label in zip(train_x, train_y)]
-        test_docs = [(sent, label) for sent, label in zip(test_x, test_y)]
-
-        cls = SentimentAnalyzer()
+        cls = tree.DecisionTreeClassifier()
 
         # train
-        words_with_neg = cls.all_words([mark_negation(a) for a in train_x])
-        unigram_feats = cls.unigram_word_feats(words_with_neg)
-        bigram_feats = cls.bigram_collocation_feats(train_x)
+        train_x = vectorizer.fit_transform(train_x).toarray()
 
-        cls.add_feat_extractor(extract_unigram_feats, unigrams=unigram_feats, handle_negation=True)
-        cls.add_feat_extractor(extract_bigram_feats, bigrams=bigram_feats)
+        cls.fit(train_x, train_y)
 
-        training_set = cls.apply_features(train_docs, labeled=True)
+        # test
+        test_x = vectorizer.transform(test_x).toarray()
 
-        cls.train(DecisionTreeClassifier.train, training_set, entropy_cutoff=0.05,
-                  depth_cutoff=60, support_cutoff=10)
+        pred_y = cls.predict(test_x)
 
-        # test & evaluate
-        test_set = cls.apply_features(test_docs)
+        # evaluate
+        p, r, f, _ = precision_recall_fscore_support(test_y, pred_y)
+        a = accuracy_score(test_y, pred_y)
+        accu_p += p
+        accu_r += r
+        accu_f += f
+        accu_a += a
 
-        for key, value in sorted(cls.evaluate(test_set).items()):
-            print('\t{0}: {1}'.format(key, value))
-            accumulate.setdefault(key, 0.0)
-            accumulate[key] += value
+        print("Evaluating classifier:")
+        print("\tAccuracy: {}".format(a))
+        print("\tPrecision[0]: {}".format(p[0]))
+        print("\tPrecision[1]: {}".format(p[1]))
+        print("\tRecall[0]: {}".format(r[0]))
+        print("\tRecall[1]: {}".format(r[1]))
+        print("\tF1-score[0]: {}".format(f[0]))
+        print("\tF1-score[1]: {}".format(f[1]))
 
-    print("Averages")
-    for key, value in sorted(accumulate.items()):
-        print('\tAverage {0}: {1}'.format(key, value/folds))
+    print("Average evaluation")
+    print("\tAccuracy: {}".format(accu_a / folds))
+    print("\tPrecision[0]: {}".format(accu_p[0] / folds))
+    print("\tPrecision[1]: {}".format(accu_p[1] / folds))
+    print("\tRecall[0]: {}".format(accu_r[0] / folds))
+    print("\tRecall[1]: {}".format(accu_r[1] / folds))
+    print("\tF1-score[0]: {}".format(accu_f[0] / folds))
+    print("\tF1-score[1]: {}".format(accu_f[1] / folds))
 
 if __name__ == '__main__':
     main()
