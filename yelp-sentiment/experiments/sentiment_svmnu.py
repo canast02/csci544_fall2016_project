@@ -13,13 +13,12 @@ from sentiment_util import load_datasets
 
 def main():
     # x, y = load_dataset("datasets/sentiment_uci/yelp_labelled.txt")
-    x, y = load_datasets(["datasets/sentiment_uci/yelp_labelled.txt"])
+    x, y = load_datasets(["../datasets/sentiment_uci/yelp_labelled.txt"])
 
     stopwords = set()
-    with open('stopwords.txt', 'r') as f:
+    with open('../stopwords.txt', 'r') as f:
         for w in f:
             stopwords.add(w)
-            
 
     tok = TweetTokenizer()
     stemmer = EnglishStemmer()

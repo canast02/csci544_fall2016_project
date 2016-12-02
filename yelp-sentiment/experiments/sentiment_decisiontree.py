@@ -9,10 +9,10 @@ from sentiment_util import remove_stopwords, load_datasets
 
 
 def main():
-    x, y = load_datasets(["datasets/sentiment_uci/yelp_labelled.txt", "datasets/sentiment_uci/imdb_labelled.txt"])
+    x, y = load_datasets(["../datasets/sentiment_uci/yelp_labelled.txt"])
 
     stopwords = set()
-    with open('stopwords.txt', 'r') as f:
+    with open('../stopwords.txt', 'r') as f:
         for w in f:
             stopwords.add(w.strip())
 
@@ -45,7 +45,8 @@ def main():
 
         training_set = cls.apply_features(train_docs, labeled=True)
 
-        cls.train(DecisionTreeClassifier.train, training_set, entropy_cutoff=0.05, depth_cutoff=60, support_cutoff=10)
+        cls.train(DecisionTreeClassifier.train, training_set, entropy_cutoff=0.05,
+                  depth_cutoff=60, support_cutoff=10)
 
         # test & evaluate
         test_set = cls.apply_features(test_docs)

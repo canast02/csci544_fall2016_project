@@ -15,7 +15,7 @@ class YelpSentimentAnalyzer(object):
         self._vectorizer = TfidfVectorizer(sublinear_tf=True, use_idf=True, binary=True,
                                            preprocessor=self._stemmer.stem,
                                            tokenizer=self._tok.tokenize, ngram_range=(1, 2))
-        self._cls = svm.SVC(kernel='linear', C=2.0)
+        self._cls = svm.LinearSVC(loss='hinge', C=2.0, penalty='l2', class_weight=None)
 
     def fit(self, X, y):
         X = self._vectorizer.fit_transform(X).toarray()
