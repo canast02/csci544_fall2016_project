@@ -48,4 +48,4 @@ def main():
         json.dump(sentiment, f, indent=2)
 
 if __name__ == '__main__':
-    main()
+    main() 
