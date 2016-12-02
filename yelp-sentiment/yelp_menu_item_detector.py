@@ -79,7 +79,7 @@ def produce_triples(reviews_file, menus_file, review_filter=None, restaurant_fil
         for sent in sent_tokenizer.tokenize(rtext):
             for menu_item, text in look_for_menu_item(menu, sent):
                 yield rid, menu_item, text
-    sys.stderr.write("1.0\n")
+    sys.stderr.write("\r1.0\n")
 
 
 def main():
