@@ -7,6 +7,8 @@ some of its packages.
 
 ```
 $ pip install nltk
+$ pip install python-Levenshtein
+$ pip install fuzzywuzzy
 ```
 Then on the python console run the following:
 ```
@@ -18,5 +20,5 @@ A window will open; navigate to all packages and download ```punkt``` and
 
 ### Running the extractor
 
-You need to run the ```sentiment_analyzer.py``` giving two parameters; the
-path to the reviews file and the filename for the sentiment output.
+You need to run the ```yelp_sentiment_analyzer.py``` giving three parameters; the
+path to the reviews file, the path to the menus file and the filename for the sentiment output.
