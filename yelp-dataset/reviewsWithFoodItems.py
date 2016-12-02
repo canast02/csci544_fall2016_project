@@ -25,5 +25,5 @@ of the foodwords and the words in the reviews is greater than 0'''
 ks = rr4to5.keys()
 for each in ks:
     revgrams = re.compile('\w+').findall(rr4to5[each])
-    if len(foodwords.intersection(revgrams)) == 0:
+    if len(foodwords.intersection(revgrams)) == 0: 
         del rr4to5[each]
