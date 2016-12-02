@@ -16,7 +16,7 @@ Then on the python console run the following:
 >>> nltk.download()
 ```
 A window will open; navigate to all packages and download ```punkt``` and
-```vader_lexicon```.
+```vader_lexicon``` .
 
 ### Running the extractor
 
