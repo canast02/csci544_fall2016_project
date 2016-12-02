@@ -19,6 +19,7 @@ def main():
     with open('stopwords.txt', 'r') as f:
         for w in f:
             stopwords.add(w)
+            
 
     tok = TweetTokenizer()
     stemmer = EnglishStemmer()
