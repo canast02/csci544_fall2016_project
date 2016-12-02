@@ -76,7 +76,7 @@ def main():
         print([restaurant, menu_item, review_text])
     f.close()
 
-    end = time.time()
+    end = time.time() 
     print("Found {} triples in {} sec".format(count, end - start))
 
 if __name__ == '__main__':
