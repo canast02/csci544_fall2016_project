@@ -31,7 +31,8 @@ We have tried performing sentiment analysis classification with the following al
 - Support Vector Machines (Linear and Nu)
 - Decision Tree
 - Random Forest
-- Maximum Entropy
+- Stochiastic Gradient Descent
+- Positive Naive Bayes
 - Logistic Regression
 
 
