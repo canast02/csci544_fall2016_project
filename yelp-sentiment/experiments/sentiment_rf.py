@@ -1,7 +1,6 @@
 import numpy as np
 from nltk import TweetTokenizer, accuracy
 from nltk.stem.snowball import EnglishStemmer
-from sklearn import svm
 from sklearn.cross_validation import StratifiedKFold
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
